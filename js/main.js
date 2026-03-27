@@ -58,7 +58,7 @@
     if (user) {
       authLinks.innerHTML = `
         <span class="nav-user-name">${user.name}</span>
-        <a href="/account.html" class="nav-link" data-i18n="nav_account"></a>
+        <a href="account.html" class="nav-link" data-i18n="nav_account"></a>
         <a href="#" class="nav-link" id="nav-logout-btn" data-i18n="nav_logout"></a>
       `;
       document.getElementById('nav-logout-btn')?.addEventListener('click', (e) => {
@@ -66,7 +66,7 @@
       });
       if (adminLink) adminLink.style.display = user.role === 'admin' ? '' : 'none';
     } else {
-      authLinks.innerHTML = `<a href="/login.html" class="nav-link" data-i18n="nav_login"></a>`;
+      authLinks.innerHTML = `<a href="login.html" class="nav-link" data-i18n="nav_login"></a>`;
       if (adminLink) adminLink.style.display = 'none';
     }
     applyLang();

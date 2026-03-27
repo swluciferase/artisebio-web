@@ -12,6 +12,7 @@ const I18N = {
     nav_admin: '後台管理',
     nav_vision: '願景',
     nav_ecosystem: 'Mynd',
+    nav_steeg: 'StEEG',
 
     hero_title: '先進腦電技術 · 開拓認知科學新境界',
     hero_sub: 'Artise Biomedical — StEEG 腦機介面完整解決方案',
@@ -124,6 +125,7 @@ const I18N = {
     nav_admin: 'Admin',
     nav_vision: 'Vision',
     nav_ecosystem: 'Mynd',
+    nav_steeg: 'StEEG',
 
     hero_title: 'Advanced EEG Technology · Pioneering Cognitive Science',
     hero_sub: 'Artise Biomedical — Complete StEEG Brain-Computer Interface Solutions',
