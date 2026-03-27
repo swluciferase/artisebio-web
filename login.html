@@ -3,19 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — StEEG</title>
+  <title>Login — Artise Biomedical</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand">
-      <span class="brand-steeg">StEEG</span>
-      <span class="brand-sub">by Artise Biomedical</span>
+    <a href="index.html" class="nav-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
     </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
     <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="index.html" class="nav-link" data-i18n="nav_home"></a>
+      <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
+      <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
+      <a href="cart.html" class="nav-link nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
       <div id="nav-auth"></div>
       <button id="lang-toggle" class="lang-toggle">EN</button>
     </div>
@@ -24,6 +30,16 @@
 
 <main class="auth-page">
   <div class="auth-card">
+    <div class="auth-logo">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" style="height:40px;width:auto;margin-bottom:8px">
+    </div>
+
+    <!-- Demo notice -->
+    <div class="alert" style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);color:#1e40af;border-radius:8px;padding:12px 14px;font-size:.84rem;margin-bottom:20px;line-height:1.5">
+      <span data-lang="zh">⚠️ 此為靜態展示版本。登入功能需連線至本地伺服器（<code>localhost:3000</code>）方可使用。如需體驗完整功能，請聯絡 <a href="mailto:sales@artisebio.com" style="color:#1d4ed8">sales@artisebio.com</a>。</span>
+      <span data-lang="en">⚠️ This is a static demo. Login requires connecting to the local server (<code>localhost:3000</code>). For full access, contact <a href="mailto:sales@artisebio.com" style="color:#1d4ed8">sales@artisebio.com</a>.</span>
+    </div>
+
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" data-i18n="login_title"></button>
       <button class="auth-tab" id="tab-register" data-i18n="register_title"></button>
@@ -39,7 +55,10 @@
         <label data-i18n="password"></label>
         <input type="password" id="l-password" class="form-input" autocomplete="current-password" required>
       </div>
-      <p class="form-error" id="login-error" style="display:none" data-i18n="login_error"></p>
+      <p class="form-error" id="login-error" style="display:none">
+        <span data-lang="zh">伺服器無法連線，此功能僅在本地模式下可用。</span>
+        <span data-lang="en">Server unavailable. This feature only works in local mode.</span>
+      </p>
       <button type="submit" class="btn btn-primary btn-block" data-i18n="login_btn"></button>
     </form>
 
@@ -75,8 +94,7 @@
 (function () {
   'use strict';
 
-  // Redirect if already logged in
-  if (API.token()) { window.location.href = '/'; }
+  if (API.token()) { window.location.href = 'index.html'; }
 
   function switchTab(active) {
     document.getElementById('tab-login').classList.toggle('active', active === 'login');
@@ -86,10 +104,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    applyLang();
     document.getElementById('tab-login').addEventListener('click', () => switchTab('login'));
     document.getElementById('tab-register').addEventListener('click', () => switchTab('register'));
 
-    // Check ?mode=register
     if (new URLSearchParams(window.location.search).get('mode') === 'register') {
       switchTab('register');
     }
@@ -104,7 +122,7 @@
           password: document.getElementById('l-password').value,
         });
         APP.setUser(data.user, data.token);
-        const next = new URLSearchParams(window.location.search).get('next') || '/';
+        const next = new URLSearchParams(window.location.search).get('next') || 'index.html';
         window.location.href = next;
       } catch {
         errEl.style.display = '';
@@ -123,9 +141,9 @@
           company: document.getElementById('r-company').value,
         });
         APP.setUser(data.user, data.token);
-        window.location.href = '/';
+        window.location.href = 'index.html';
       } catch (err) {
-        errEl.textContent = err.message;
+        errEl.textContent = err.message || (getLang() === 'zh' ? '伺服器無法連線' : 'Server unavailable');
         errEl.style.display = '';
       }
     });

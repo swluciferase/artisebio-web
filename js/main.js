@@ -22,7 +22,7 @@
     _user = null;
     localStorage.removeItem('steeg_user');
     localStorage.removeItem('steeg_token');
-    window.location.href = '/';
+    window.location.href = 'index.html';
   }
 
   // ── Toast ─────────────────────────────────────

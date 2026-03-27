@@ -10,12 +10,12 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand">
+    <a href="index.html" class="nav-brand">
       <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
     </a>
     <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
     <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="index.html" class="nav-link" data-i18n="nav_home"></a>
       <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
       <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
       <a href="cart.html" class="nav-link active nav-cart-link">
@@ -46,8 +46,9 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="brand-steeg">StEEG</span>
-      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+      <img src="images/artise-logo.png" alt="Artise Biomedical" style="height:28px;width:auto;filter:brightness(0) invert(1);opacity:.8">
+      <span class="footer-company" data-lang="zh">亞堤仕生醫科技股份有限公司</span>
+      <span class="footer-company" data-lang="en">Artise Biomedical Co., Ltd.</span>
     </div>
     <div class="footer-contact">
       <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
@@ -84,7 +85,7 @@
       return `
         <tr class="cart-row" data-id="${item.product_id}">
           <td class="cart-img-cell">
-            <img src="${item.image_url || '/images/placeholder.png'}" alt="${name}" class="cart-thumb">
+            <img src="${item.image_url || 'images/placeholder.png'}" alt="${name}" class="cart-thumb">
           </td>
           <td class="cart-name-cell">
             <div class="cart-item-name">${name}</div>
@@ -203,22 +204,21 @@
     btn.disabled = true;
     btn.textContent = t('loading');
 
-    try {
-      const items = cart.map(i => ({
-        product_id: i.product_id,
-        product_name: i.name_zh + ' / ' + i.name_en,
-        qty: i.qty,
-        price: i.price || 0,
-      }));
-      await API.post('/orders', { items, type, note, guest_name, guest_email, guest_company });
-      CART.clear();
-      APP.showToast(t('order_success'), 'success');
-      setTimeout(() => { window.location.href = '/'; }, 2000);
-    } catch {
-      APP.showToast(t('order_error'), 'error');
-      btn.disabled = false;
-      btn.textContent = t('submit_order');
-    }
+    // Static demo — no backend. Show email instruction instead.
+    const cartSummary = cart.map(i => {
+      const name = getLang() === 'zh' ? i.name_zh : i.name_en;
+      return `${name} x${i.qty}`;
+    }).join(', ');
+    const subject = encodeURIComponent((type === 'purchase' ? '[Purchase] ' : '[Inquiry] ') + 'Artise Biomedical');
+    const body = encodeURIComponent(
+      `姓名/Name: ${guest_name || (APP.getUser()?.name || '')}\nEmail: ${guest_email || (APP.getUser()?.email || '')}\n公司/Company: ${guest_company}\n\n訂單/Order:\n${cartSummary}\n\n備註/Note:\n${note}`
+    );
+    window.open(`mailto:sales@artisebio.com?subject=${subject}&body=${body}`, '_blank');
+    CART.clear();
+    APP.showToast(t('order_success'), 'success');
+    btn.disabled = false;
+    btn.textContent = t('submit_order');
+    setTimeout(() => render(), 500);
   }
 
   document.addEventListener('DOMContentLoaded', render);

@@ -11,12 +11,12 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand">
+    <a href="index.html" class="nav-brand">
       <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
     </a>
     <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
     <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="index.html" class="nav-link" data-i18n="nav_home"></a>
       <a href="products.html" class="nav-link active" data-i18n="nav_products"></a>
       <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
       <a href="cart.html" class="nav-link nav-cart-link">
@@ -62,8 +62,9 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="brand-steeg">StEEG</span>
-      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+      <img src="images/artise-logo.png" alt="Artise Biomedical" style="height:28px;width:auto;filter:brightness(0) invert(1);opacity:.8">
+      <span class="footer-company" data-lang="zh">亞堤仕生醫科技股份有限公司</span>
+      <span class="footer-company" data-lang="en">Artise Biomedical Co., Ltd.</span>
     </div>
     <div class="footer-contact">
       <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
@@ -81,26 +82,76 @@
 (function () {
   'use strict';
 
-  let allProducts = [];
-  let allCategories = [];
+  // ── Static product data (demo mode — no backend) ──────────────
+  const STATIC_CATEGORIES = [
+    { slug: 'eeg-devices', name_zh: 'EEG 裝置', name_en: 'EEG Devices' },
+    { slug: 'software',    name_zh: '軟體',     name_en: 'Software' },
+    { slug: 'accessories', name_zh: '配件',     name_en: 'Accessories' },
+  ];
+
+  const STATIC_PRODUCTS = [
+    {
+      id:1, slug:'altair', model_id:'Altair', cat_slug:'eeg-devices', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'Altair — 8 通道乾式無線 EEG', name_en:'Altair — 8-Channel Dry Wireless EEG',
+      description_zh:'免備皮電極，穿戴即測。1000 Hz 高速採樣，藍牙傳輸，適合移動場景與日常腦健康監測。',
+      description_en:'No-prep dry electrodes, wearable and instant. 1000 Hz sampling, Bluetooth transmission — ideal for mobile scenarios and daily brain health monitoring.',
+      specs_json: JSON.stringify([{key:'通道數/Channels',value:'8'},{key:'採樣率/Sample Rate',value:'1000 Hz'},{key:'傳輸/Transmission',value:'Bluetooth 5.0'},{key:'電極/Electrodes',value:'乾式 / Dry'}]),
+      image_url:'',
+    },
+    {
+      id:2, slug:'sirius', model_id:'Sirius', cat_slug:'eeg-devices', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'Sirius — 20 通道無線 EEG 帽', name_en:'Sirius — 20-Channel Wireless EEG Cap',
+      description_zh:'免凝膠海綿電極，BCI 研究級，支援兒童（3歲以上）。適合認知研究與臨床評估。',
+      description_en:'Gel-free sponge electrodes, BCI research-grade, supports children 3+. Suitable for cognitive research and clinical assessment.',
+      specs_json: JSON.stringify([{key:'通道數/Channels',value:'20'},{key:'採樣率/Sample Rate',value:'500 Hz'},{key:'傳輸/Transmission',value:'Wi-Fi'},{key:'電極/Electrodes',value:'海綿 / Sponge'}]),
+      image_url:'',
+    },
+    {
+      id:3, slug:'vega', model_id:'Vega', cat_slug:'eeg-devices', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'Vega — 32 通道無線 EEG 帽', name_en:'Vega — 32-Channel Wireless EEG Cap',
+      description_zh:'32 通道高密度無線 EEG，支援 ERP、腦機介面研究。免凝膠設計，快速準備。',
+      description_en:'32-channel high-density wireless EEG supporting ERP and BCI research. Gel-free design for quick setup.',
+      specs_json: JSON.stringify([{key:'通道數/Channels',value:'32'},{key:'採樣率/Sample Rate',value:'500 Hz'},{key:'傳輸/Transmission',value:'Wi-Fi'},{key:'電極/Electrodes',value:'海綿 / Sponge'}]),
+      image_url:'',
+    },
+    {
+      id:4, slug:'gemini', model_id:'Gemini', cat_slug:'eeg-devices', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'Gemini — 超掃描 EEG', name_en:'Gemini — Hyperscanning EEG',
+      description_zh:'EEG / ECG / EMG 可切換，支援多人同步量測，適合社會神經科學與雙人互動研究。',
+      description_en:'Switchable EEG/ECG/EMG, supports multi-person synchronous measurement for social neuroscience and dyadic interaction research.',
+      specs_json: JSON.stringify([{key:'模式/Mode',value:'EEG / ECG / EMG'},{key:'超掃描/Hyperscanning',value:'✓ 最多 4 人'},{key:'採樣率/Sample Rate',value:'500 Hz'}]),
+      image_url:'',
+    },
+    {
+      id:5, slug:'cygnus', model_id:'Cygnus', cat_slug:'software', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'Cygnus — EEG 資料擷取軟體', name_en:'Cygnus — EEG Data Acquisition Software',
+      description_zh:'配合 StEEG 硬體使用的資料擷取與即時顯示軟體，支援 LSL 串流、離線分析匯出。',
+      description_en:'Data acquisition and real-time display software for StEEG hardware. Supports LSL streaming and offline analysis export.',
+      specs_json: JSON.stringify([{key:'平台/Platform',value:'Windows 10/11'},{key:'格式/Format',value:'CSV, EDF, BDF'}]),
+      image_url:'',
+    },
+    {
+      id:6, slug:'sigmacog-sub', model_id:'sigmacog', cat_slug:'software', in_stock:true, show_price:false, price:0, currency:'TWD',
+      name_zh:'sigmacog — 腦健康報告平台訂閱', name_en:'sigmacog — Brain Health Platform Subscription',
+      description_zh:'訂閱制 SaaS 平台。5 分鐘完成臨床級 EEG 腦健康評估，AI 生成個人化報告，雲端儀表板管理。',
+      description_en:'Subscription SaaS platform. Clinical-grade EEG brain health assessment in 5 minutes, AI-generated personalized reports, cloud dashboard.',
+      specs_json: JSON.stringify([{key:'評估指標',value:'7 項 EEG 認知指標'},{key:'常模',value:'全年齡層'},{key:'部署',value:'雲端 SaaS'}]),
+      image_url:'',
+    },
+  ];
+
+  let allProducts = STATIC_PRODUCTS;
+  let allCategories = STATIC_CATEGORIES;
   let activeCat = '';
 
   // Check for ?slug= param to show product detail
   const urlParams = new URLSearchParams(window.location.search);
   const slugParam = urlParams.get('slug');
 
-  async function init() {
-    try {
-      [allProducts, allCategories] = await Promise.all([
-        API.get('/products'),
-        API.get('/categories'),
-      ]);
-      renderTabs();
-      renderGrid();
-      if (slugParam) openProductBySlug(slugParam);
-    } catch (e) {
-      document.getElementById('product-grid').innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
-    }
+  function init() {
+    renderTabs();
+    renderGrid();
+    if (slugParam) openProductBySlug(slugParam);
   }
 
   function renderTabs() {
@@ -154,7 +205,7 @@
       btn.addEventListener('click', () => {
         const slug = btn.dataset.slug;
         openProductBySlug(slug);
-        history.pushState({}, '', '/products.html?slug=' + slug);
+        history.pushState({}, '', 'products.html?slug=' + slug);
       });
     });
   }
@@ -172,7 +223,7 @@
     return `
       <div class="product-card">
         <div class="product-img-wrap btn-detail" data-slug="${p.slug}" style="cursor:pointer">
-          <img src="${p.image_url || '/images/placeholder.png'}" alt="${name}" loading="lazy">
+          <img src="${p.image_url || 'images/placeholder.png'}" alt="${name}" loading="lazy">
         </div>
         <div class="product-card-body">
           <div class="product-model">${p.model_id || ''}</div>
@@ -190,69 +241,65 @@
       </div>`;
   }
 
-  async function openProductBySlug(slug) {
+  function openProductBySlug(slug) {
     const modal = document.getElementById('product-modal');
     const content = document.getElementById('modal-content');
     modal.style.display = 'flex';
-    content.innerHTML = '<p class="loading-placeholder">' + t('loading') + '</p>';
-    try {
-      const p = await API.get('/products/' + slug);
-      const lang = getLang();
-      const name = lang === 'zh' ? p.name_zh : p.name_en;
-      const desc = (lang === 'zh' ? p.description_zh : p.description_en) || '';
-      let specs = [];
-      try { specs = JSON.parse(p.specs_json || '[]'); } catch {}
-      const specsHtml = specs.length ? `
-        <div class="specs-section">
-          <h4 data-i18n="specs">${t('specs')}</h4>
-          <table class="specs-table">
-            ${specs.map(s => `<tr><th>${s.key || s[0] || ''}</th><td>${s.value || s[1] || ''}</td></tr>`).join('')}
-          </table>
-        </div>` : '';
-      const priceHtml = p.show_price
-        ? `<span class="product-price lg">${p.currency} ${p.price.toLocaleString()}</span>`
-        : `<span class="product-price contact lg">${t('contact_agent')}</span>`;
-      const cartBtn = p.in_stock
-        ? `<button class="btn btn-primary btn-add-cart" id="modal-add-cart" data-product='${JSON.stringify(p).replace(/'/g, "&#39;")}'>${t('add_cart')}</button>`
-        : `<button class="btn btn-primary" disabled>${t('out_of_stock')}</button>`;
+    const p = allProducts.find(x => x.slug === slug);
+    if (!p) { content.innerHTML = '<p class="error-msg">—</p>'; return; }
+    const lang = getLang();
+    const name = lang === 'zh' ? p.name_zh : p.name_en;
+    const desc = (lang === 'zh' ? p.description_zh : p.description_en) || '';
+    let specs = [];
+    try { specs = JSON.parse(p.specs_json || '[]'); } catch {}
+    const specsHtml = specs.length ? `
+      <div class="specs-section">
+        <h4>${t('specs')}</h4>
+        <table class="specs-table">
+          ${specs.map(s => `<tr><th>${s.key || s[0] || ''}</th><td>${s.value || s[1] || ''}</td></tr>`).join('')}
+        </table>
+      </div>` : '';
+    const priceHtml = p.show_price
+      ? `<span class="product-price lg">${p.currency} ${p.price.toLocaleString()}</span>`
+      : `<span class="product-price contact lg">${t('contact_agent')}</span>`;
+    const cartBtn = p.in_stock
+      ? `<button class="btn btn-primary btn-add-cart" id="modal-add-cart" data-product='${JSON.stringify(p).replace(/'/g, "&#39;")}'>${t('add_cart')}</button>`
+      : `<button class="btn btn-primary" disabled>${t('out_of_stock')}</button>`;
 
-      content.innerHTML = `
-        <div class="modal-product">
-          <div class="modal-product-img">
-            <img src="${p.image_url || '/images/placeholder.png'}" alt="${name}">
+    content.innerHTML = `
+      <div class="modal-product">
+        <div class="modal-product-img">
+          <img src="${p.image_url || 'images/placeholder.png'}" alt="${name}">
+        </div>
+        <div class="modal-product-info">
+          <div class="product-model">${p.model_id || ''}</div>
+          <h2 class="modal-product-name">${name}</h2>
+          <p class="modal-product-desc">${desc}</p>
+          ${specsHtml}
+          <div class="modal-product-footer">
+            ${priceHtml}
+            ${cartBtn}
           </div>
-          <div class="modal-product-info">
-            <div class="product-model">${p.model_id || ''}</div>
-            <h2 class="modal-product-name">${name}</h2>
-            <p class="modal-product-desc">${desc}</p>
-            ${specsHtml}
-            <div class="modal-product-footer">
-              ${priceHtml}
-              ${cartBtn}
-            </div>
-          </div>
-        </div>`;
-      document.getElementById('modal-add-cart')?.addEventListener('click', function () {
-        const prod = JSON.parse(this.dataset.product);
-        CART.add({
-          product_id: prod.id,
-          product_name: prod.name_zh + ' / ' + prod.name_en,
-          name_zh: prod.name_zh,
-          name_en: prod.name_en,
-          price: prod.price,
-          currency: prod.currency,
-          image_url: prod.image_url,
-        });
-        APP.showToast(t('toast_added'), 'success');
+        </div>
+      </div>`;
+    document.getElementById('modal-add-cart')?.addEventListener('click', function () {
+      const prod = JSON.parse(this.dataset.product);
+      CART.add({
+        product_id: prod.id,
+        product_name: prod.name_zh + ' / ' + prod.name_en,
+        name_zh: prod.name_zh,
+        name_en: prod.name_en,
+        price: prod.price,
+        currency: prod.currency,
+        image_url: prod.image_url,
       });
-    } catch {
-      content.innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
-    }
+      APP.showToast(t('toast_added'), 'success');
+    });
   }
 
   function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
-    history.pushState({}, '', '/products.html');
+    history.pushState({}, '', 'products.html');
   }
 
   document.addEventListener('DOMContentLoaded', () => {

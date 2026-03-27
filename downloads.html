@@ -3,19 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Downloads — StEEG</title>
+  <title>Downloads — Artise Biomedical</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .dl-group { margin-bottom: 40px; }
+    .dl-group-title { font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:16px;
+      padding-bottom:8px; border-bottom:2px solid var(--gray2); }
+    .dl-cards { display: flex; flex-direction: column; gap: 12px; }
+    .dl-card { display:flex; align-items:center; gap:16px; padding:18px 22px;
+      background:#fff; border:1px solid var(--gray2); border-radius:10px;
+      transition:border-color .2s; }
+    .dl-card:hover { border-color:var(--cyan); }
+    .dl-card-body { flex:1; }
+    .dl-card-name { font-weight:700; color:var(--navy); margin-bottom:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .dl-version { font-size:.72rem; color:var(--muted); background:var(--gray1); padding:2px 8px; border-radius:10px; }
+    .dl-card-desc { font-size:.84rem; color:var(--muted); line-height:1.55; }
+    .dl-card-action { flex-shrink:0; }
+    .dl-locked { opacity:.75; }
+    .btn-outline { background:none; color:var(--navy); border:1.5px solid var(--gray3); padding:7px 14px; border-radius:6px; font-size:.82rem; font-weight:600; text-decoration:none; display:inline-block; transition:all .15s; }
+    .btn-outline:hover { border-color:var(--cyan); color:var(--cyan); }
+  </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand">
+    <a href="index.html" class="nav-brand">
       <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
     </a>
     <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
     <div class="nav-menu" id="nav-menu">
-      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="index.html" class="nav-link" data-i18n="nav_home"></a>
       <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
       <a href="downloads.html" class="nav-link active" data-i18n="nav_downloads"></a>
       <a href="cart.html" class="nav-link nav-cart-link">
@@ -38,23 +56,131 @@
 
 <main class="section">
   <div class="container">
-    <div id="downloads-list">
-      <p class="loading-placeholder" data-i18n="loading"></p>
+
+    <div class="dl-group">
+      <h3 class="dl-group-title">
+        <span data-lang="zh">產品文件</span>
+        <span data-lang="en">Product Documents</span>
+      </h3>
+      <div class="dl-cards">
+
+        <div class="dl-card">
+          <div class="dl-card-body">
+            <div class="dl-card-name">
+              <span data-lang="zh">📄 2025 產品型錄</span>
+              <span data-lang="en">📄 2025 Product Catalog</span>
+              <span class="dl-version">2025</span>
+            </div>
+            <div class="dl-card-desc">
+              <span data-lang="zh">Artise Biomedical 完整產品一覽，包含 StEEG 硬體與 sigmacog 平台介紹。</span>
+              <span data-lang="en">Complete Artise Biomedical product overview including StEEG hardware and sigmacog platform.</span>
+            </div>
+          </div>
+          <div class="dl-card-action">
+            <a href="downloads/Artisebio_DM_2025.pdf" class="btn btn-sm btn-sm-primary" download target="_blank">
+              ⬇ <span data-i18n="download"></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-card-body">
+            <div class="dl-card-name">
+              <span data-lang="zh">🏢 大腦健身房：企業全方位關懷方案</span>
+              <span data-lang="en">🏢 Brain Gym: Corporate Holistic Care Plan</span>
+              <span class="dl-version">2025</span>
+            </div>
+            <div class="dl-card-desc">
+              <span data-lang="zh">企業員工腦健康評測與訓練整合方案，適合 HR 與健康管理部門。</span>
+              <span data-lang="en">Corporate brain health assessment and training plan for HR and wellness departments.</span>
+            </div>
+          </div>
+          <div class="dl-card-action">
+            <a href="downloads/%E5%A4%A7%E8%85%A6%E5%81%A5%E8%BA%AB%E6%88%BF%EF%BC%9A%E4%BC%81%E6%A5%AD%E5%85%A8%E6%96%B9%E4%BD%8D%E9%97%9C%E6%87%B7%E6%96%B9%E6%A1%88.pdf" class="btn btn-sm btn-sm-primary" download target="_blank">
+              ⬇ <span data-i18n="download"></span>
+            </a>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <div class="dl-group">
+      <h3 class="dl-group-title">
+        <span data-lang="zh">軟體 / 韌體（需登入）</span>
+        <span data-lang="en">Software / Firmware (Login Required)</span>
+      </h3>
+      <div class="dl-cards">
+
+        <div class="dl-card dl-locked">
+          <div class="dl-card-body">
+            <div class="dl-card-name">
+              <span data-lang="zh">🖥️ Cygnus EEG 資料擷取軟體</span>
+              <span data-lang="en">🖥️ Cygnus EEG Data Acquisition Software</span>
+              <span class="dl-version">v2.5</span>
+            </div>
+            <div class="dl-card-desc">
+              <span data-lang="zh">適用於 Altair / Sirius / Vega / Gemini，支援 Windows 10/11。</span>
+              <span data-lang="en">Compatible with Altair / Sirius / Vega / Gemini, supports Windows 10/11.</span>
+            </div>
+          </div>
+          <div class="dl-card-action">
+            <a href="login.html" class="btn-outline">🔒 <span data-i18n="login_required"></span></a>
+          </div>
+        </div>
+
+        <div class="dl-card dl-locked">
+          <div class="dl-card-body">
+            <div class="dl-card-name">
+              <span data-lang="zh">📡 StEEG USB 驅動程式</span>
+              <span data-lang="en">📡 StEEG USB Driver</span>
+              <span class="dl-version">v1.2</span>
+            </div>
+            <div class="dl-card-desc">
+              <span data-lang="zh">Windows 10/11 驅動安裝包。</span>
+              <span data-lang="en">Windows 10/11 driver installer.</span>
+            </div>
+          </div>
+          <div class="dl-card-action">
+            <a href="login.html" class="btn-outline">🔒 <span data-i18n="login_required"></span></a>
+          </div>
+        </div>
+
+        <div class="dl-card dl-locked">
+          <div class="dl-card-body">
+            <div class="dl-card-name">
+              <span data-lang="zh">📘 Altair 使用手冊</span>
+              <span data-lang="en">📘 Altair User Manual</span>
+              <span class="dl-version">v1.0</span>
+            </div>
+            <div class="dl-card-desc">
+              <span data-lang="zh">8 通道乾式無線 EEG 操作說明書。</span>
+              <span data-lang="en">8-channel dry wireless EEG operation manual.</span>
+            </div>
+          </div>
+          <div class="dl-card-action">
+            <a href="login.html" class="btn-outline">🔒 <span data-i18n="login_required"></span></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </main>
 
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="brand-steeg">StEEG</span>
-      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+      <img src="images/artise-logo.png" alt="Artise Biomedical" style="height:28px;width:auto;filter:brightness(0) invert(1);opacity:.8">
+      <span class="footer-company" data-lang="zh">亞堤仕生醫科技股份有限公司</span>
+      <span class="footer-company" data-lang="en">Artise Biomedical Co., Ltd.</span>
     </div>
     <div class="footer-contact">
       <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
       <a href="tel:+886229088658">+886-2-2908-8658</a>
     </div>
-    <div class="footer-copy" data-i18n="footer_rights"></div>
+    <div class="footer-copy">© 2025 Artise Biomedical Co., Ltd. All rights reserved.</div>
   </div>
 </footer>
 
@@ -62,75 +188,5 @@
 <script src="js/api.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
-<script>
-(function () {
-  'use strict';
-
-  const catLabels = {
-    software: { zh: '軟體', en: 'Software' },
-    firmware: { zh: '韌體', en: 'Firmware' },
-    manual: { zh: '使用手冊', en: 'Manual' },
-    driver: { zh: '驅動程式', en: 'Driver' },
-  };
-
-  async function loadDownloads() {
-    const list = document.getElementById('downloads-list');
-    try {
-      const items = await API.get('/downloads');
-      if (!items.length) { list.innerHTML = '<p>—</p>'; return; }
-
-      // Group by category
-      const groups = {};
-      items.forEach(d => {
-        if (!groups[d.category]) groups[d.category] = [];
-        groups[d.category].push(d);
-      });
-
-      const lang = getLang();
-      let html = '';
-      Object.entries(groups).forEach(([cat, rows]) => {
-        const label = catLabels[cat] ? catLabels[cat][lang] : cat;
-        html += `<div class="dl-group">
-          <h3 class="dl-group-title">${label}</h3>
-          <div class="dl-cards">
-            ${rows.map(d => dlCard(d, lang)).join('')}
-          </div>
-        </div>`;
-      });
-      list.innerHTML = html;
-    } catch {
-      list.innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
-    }
-  }
-
-  function dlCard(d, lang) {
-    const name = lang === 'zh' ? d.name_zh : d.name_en;
-    const desc = lang === 'zh' ? d.description_zh : d.description_en;
-    const ver = d.version ? `<span class="dl-version">v${d.version}</span>` : '';
-
-    let actionHtml;
-    if (d.locked) {
-      actionHtml = `<a href="login.html" class="btn btn-outline btn-sm">
-        🔒 <span data-i18n="login_required">${t('login_required')}</span>
-      </a>`;
-    } else {
-      actionHtml = `<a href="/uploads/${d.filename}" class="btn btn-primary btn-sm" download>
-        ⬇ <span data-i18n="download">${t('download')}</span>
-      </a>`;
-    }
-
-    return `
-      <div class="dl-card ${d.locked ? 'dl-locked' : ''}">
-        <div class="dl-card-body">
-          <div class="dl-card-name">${name} ${ver}</div>
-          ${desc ? `<div class="dl-card-desc">${desc}</div>` : ''}
-        </div>
-        <div class="dl-card-action">${actionHtml}</div>
-      </div>`;
-  }
-
-  document.addEventListener('DOMContentLoaded', loadDownloads);
-})();
-</script>
 </body>
 </html>
