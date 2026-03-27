@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders Admin — StEEG</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+<nav class="admin-nav">
+  <a href="../" class="admin-nav-brand"><span class="brand-steeg">StEEG</span> Admin</a>
+  <div class="admin-nav-links">
+    <a href="./" class="admin-nav-link">Dashboard</a>
+    <a href="./products.html" class="admin-nav-link">Products</a>
+    <a href="./orders.html" class="admin-nav-link active">Orders</a>
+    <a href="./downloads.html" class="admin-nav-link">Downloads</a>
+    <a href="./settings.html" class="admin-nav-link">Settings</a>
+    <a href="../" class="admin-nav-link">← Site</a>
+    <button id="admin-logout" class="btn btn-sm">Logout</button>
+  </div>
+</nav>
+
+<main class="admin-main">
+  <h1 class="admin-page-title">Orders</h1>
+
+  <div class="admin-filter-row">
+    <select id="status-filter" class="form-input form-input-sm">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="shipped">Shipped</option>
+      <option value="completed">Completed</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <select id="type-filter" class="form-input form-input-sm">
+      <option value="">All Types</option>
+      <option value="inquiry">Inquiry</option>
+      <option value="purchase">Purchase</option>
+    </select>
+  </div>
+
+  <div id="orders-list"><p>Loading…</p></div>
+</main>
+
+<!-- Order detail modal -->
+<div class="modal-overlay" id="order-modal" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div id="order-detail"></div>
+  </div>
+</div>
+
+<script src="../js/i18n.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  let allOrders = [];
+
+  async function checkAdmin() {
+    const token = API.token();
+    if (!token) { window.location.href = '/login.html?next=/admin/orders.html'; return false; }
+    try {
+      const user = await API.get('/auth/me');
+      if (user.role !== 'admin') { window.location.href = '/'; return false; }
+      return true;
+    } catch { window.location.href = '/login.html'; return false; }
+  }
+
+  async function loadOrders() {
+    const list = document.getElementById('orders-list');
+    try {
+      allOrders = await API.get('/admin/orders');
+      renderOrders();
+    } catch (e) {
+      list.innerHTML = '<p class="error-msg">' + e.message + '</p>';
+    }
+  }
+
+  function renderOrders() {
+    const statusF = document.getElementById('status-filter').value;
+    const typeF = document.getElementById('type-filter').value;
+    const list = document.getElementById('orders-list');
+
+    const filtered = allOrders.filter(o =>
+      (!statusF || o.status === statusF) &&
+      (!typeF || o.type === typeF)
+    );
+
+    if (!filtered.length) { list.innerHTML = '<p>No orders found.</p>'; return; }
+
+    list.innerHTML = `
+      <table class="admin-table">
+        <thead><tr><th>ID</th><th>Customer</th><th>Email</th><th>Type</th><th>Status</th><th>Total</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody>${filtered.map(o => `
+          <tr>
+            <td><button class="link-btn btn-view-order" data-id="${o.id}">#${o.id}</button></td>
+            <td>${o.guest_name || '—'}</td>
+            <td>${o.guest_email || o.user_email || '—'}</td>
+            <td><span class="badge badge-${o.type}">${o.type}</span></td>
+            <td>
+              <select class="status-select form-input form-input-sm" data-id="${o.id}">
+                ${['pending','confirmed','shipped','completed','cancelled'].map(s =>
+                  `<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`
+                ).join('')}
+              </select>
+            </td>
+            <td>${o.total ? 'USD ' + o.total.toLocaleString() : '—'}</td>
+            <td>${o.created_at?.slice(0,10) || ''}</td>
+            <td>
+              <button class="btn btn-sm btn-view-order" data-id="${o.id}">View</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    list.querySelectorAll('.status-select').forEach(sel => {
+      sel.addEventListener('change', async function () {
+        try {
+          await API.put('/admin/orders/' + this.dataset.id + '/status', { status: this.value });
+          const order = allOrders.find(o => o.id == this.dataset.id);
+          if (order) order.status = this.value;
+        } catch (e) { alert('Failed: ' + e.message); }
+      });
+    });
+
+    list.querySelectorAll('.btn-view-order').forEach(btn => {
+      btn.addEventListener('click', () => showOrderDetail(parseInt(btn.dataset.id)));
+    });
+  }
+
+  function showOrderDetail(id) {
+    const o = allOrders.find(x => x.id === id);
+    if (!o) return;
+    const detail = document.getElementById('order-detail');
+    detail.innerHTML = `
+      <h2>Order #${o.id}</h2>
+      <div class="order-detail-meta">
+        <div><strong>Type:</strong> <span class="badge badge-${o.type}">${o.type}</span></div>
+        <div><strong>Status:</strong> <span class="badge badge-${o.status}">${o.status}</span></div>
+        <div><strong>Date:</strong> ${o.created_at || ''}</div>
+        <div><strong>Customer:</strong> ${o.guest_name || '—'}</div>
+        <div><strong>Email:</strong> ${o.guest_email || o.user_email || '—'}</div>
+        <div><strong>Company:</strong> ${o.guest_company || '—'}</div>
+        ${o.note ? `<div><strong>Note:</strong> ${o.note}</div>` : ''}
+      </div>
+      <h3>Items</h3>
+      <table class="admin-table">
+        <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+        <tbody>${(o.items || []).map(i => `
+          <tr>
+            <td>${i.product_name}</td>
+            <td>${i.qty}</td>
+            <td>${i.price ? 'USD ' + i.price.toLocaleString() : '—'}</td>
+            <td>${i.price ? 'USD ' + (i.price * i.qty).toLocaleString() : '—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="order-total-row"><strong>Total: ${o.total ? 'USD ' + o.total.toLocaleString() : '—'}</strong></div>`;
+    document.getElementById('order-modal').style.display = 'flex';
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!await checkAdmin()) return;
+    loadOrders();
+    document.getElementById('admin-logout').addEventListener('click', () => APP.logout());
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('order-modal').style.display = 'none';
+    });
+    document.getElementById('order-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
+    });
+    document.getElementById('status-filter').addEventListener('change', renderOrders);
+    document.getElementById('type-filter').addEventListener('change', renderOrders);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACPT — StEEG</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <span class="brand-steeg">StEEG</span>
+      <span class="brand-sub">by Artise Biomedical</span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
+      <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
+      <a href="/acpt.html" class="nav-link active" data-i18n="nav_acpt"></a>
+      <a href="cart.html" class="nav-link nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <div id="nav-auth"></div>
+      <a href="admin/" class="nav-link nav-admin" id="nav-admin-link" style="display:none" data-i18n="nav_admin"></a>
+      <button id="lang-toggle" class="lang-toggle">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1 data-i18n="acpt_title"></h1>
+    <p class="page-header-sub" data-i18n="acpt_desc"></p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container acpt-launch">
+    <div class="acpt-info-card">
+      <h2>
+        <span data-lang="zh">動物持續注意力測驗 (ACPT)</span>
+        <span data-lang="en">Animal Continuous Performance Test (ACPT)</span>
+      </h2>
+      <p data-lang="zh">ACPT 是一套以視覺刺激為基礎的電腦化注意力評估工具，適用於小動物（大鼠、小鼠）的認知行為研究與藥效評估。整合 StEEG 腦電系統可同步記錄行為與腦電數據。</p>
+      <p data-lang="en">ACPT is a computerized visual attention assessment tool for small animal cognitive behavior research and pharmacological efficacy evaluation. Integration with StEEG EEG systems enables synchronized behavioral and EEG recording.</p>
+
+      <div class="acpt-features">
+        <div class="acpt-feature">
+          <div class="acpt-feature-icon">🎯</div>
+          <div>
+            <strong data-lang="zh">持續注意力測驗</strong>
+            <strong data-lang="en">Sustained Attention Test</strong>
+            <p data-lang="zh">量化動物的注意力維持能力與衝動控制</p>
+            <p data-lang="en">Quantify sustained attention and impulse control in animals</p>
+          </div>
+        </div>
+        <div class="acpt-feature">
+          <div class="acpt-feature-icon">📊</div>
+          <div>
+            <strong data-lang="zh">自動報告產生</strong>
+            <strong data-lang="en">Auto Report Generation</strong>
+            <p data-lang="zh">測驗完成後自動生成包含 T 分數的標準化報告</p>
+            <p data-lang="en">Automatically generates standardized reports with T-scores after testing</p>
+          </div>
+        </div>
+        <div class="acpt-feature">
+          <div class="acpt-feature-icon">📁</div>
+          <div>
+            <strong data-lang="zh">CSV 匯入分析</strong>
+            <strong data-lang="en">CSV Import Analysis</strong>
+            <p data-lang="zh">支援匯入已存檔的 CSV 測驗數據重新生成報告</p>
+            <p data-lang="en">Import archived CSV test data to regenerate reports</p>
+          </div>
+        </div>
+        <div class="acpt-feature">
+          <div class="acpt-feature-icon">🧠</div>
+          <div>
+            <strong data-lang="zh">StEEG 整合</strong>
+            <strong data-lang="en">StEEG Integration</strong>
+            <p data-lang="zh">可與 StEEG 腦電系統同步記錄測驗期間的腦電活動</p>
+            <p data-lang="en">Synchronized EEG recording during testing with StEEG system</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="acpt-launch-btns">
+        <a href="/acpt-app/index.html" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+          <span data-lang="zh">🚀 啟動 ACPT 測驗</span>
+          <span data-lang="en">🚀 Launch ACPT Test</span>
+        </a>
+        <a href="downloads.html" class="btn btn-outline btn-lg">
+          <span data-lang="zh">⬇ 下載離線版</span>
+          <span data-lang="en">⬇ Download Offline Version</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-steeg">StEEG</span>
+      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+      <a href="tel:+886229088658">+886-2-2908-8658</a>
+    </div>
+    <div class="footer-copy" data-i18n="footer_rights"></div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

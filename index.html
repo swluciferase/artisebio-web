@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artise Biomedical — 亞堤仕生醫科技</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
+    </a>
+    <button class="nav-toggle" id="nav-toggle">&#9776;</button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="#story"   class="nav-link" data-i18n="nav_vision"></a>
+      <a href="#sigmacog-section" class="nav-link">sigmacog</a>
+      <a href="#ecosystem" class="nav-link" data-i18n="nav_ecosystem"></a>
+      <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
+      <a href="cart.html" class="nav-link nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <div id="nav-auth"></div>
+      <a href="admin/" class="nav-link nav-admin" id="nav-admin-link" style="display:none" data-i18n="nav_admin"></a>
+      <button id="lang-toggle" class="lang-toggle">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-dark">
+  <div class="hero-dark-bg"></div>
+  <div class="hero-dark-content">
+    <div class="hero-dark-badge">Artise Biomedical</div>
+    <h1 class="hero-dark-title">
+      <span data-lang="zh">從神經解碼到<br><span class="gradient-text">巔峰表現</span></span>
+      <span data-lang="en">From Neuro-Decoding to<br><span class="gradient-text">Peak Performance</span></span>
+    </h1>
+    <p class="hero-dark-sub">
+      <span data-lang="zh">精準腦波解碼，全面激活心智潛能——科學評測、即時監測與個人化訓練的閉環解決方案。</span>
+      <span data-lang="en">Precision brainwave decoding, fully activating the mind's potential — a closed-loop solution for scientific assessment, real-time monitoring, and personalized training.</span>
+    </p>
+    <div class="hero-dark-actions">
+      <a href="#sigmacog-section" class="btn btn-blue" data-i18n="hero_cta_tech"></a>
+      <a href="https://dash.lightup.tw/auth/login" target="_blank" rel="noopener" class="btn btn-teal" data-i18n="hero_cta_exp"></a>
+    </div>
+  </div>
+  <div class="hero-dark-visual">
+    <div class="brain-visual">
+      <div class="brain-ring ring1"></div>
+      <div class="brain-ring ring2"></div>
+      <div class="brain-ring ring3"></div>
+      <div class="brain-icon">🧠</div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY / VISION -->
+<section class="section" id="story">
+  <div class="container story-grid">
+    <div>
+      <div class="section-eyebrow" data-i18n="story_eyebrow"></div>
+      <h2 class="section-title">
+        <span data-lang="zh">大腦不應是<span class="gradient-text">黑盒子</span></span>
+        <span data-lang="en">The Brain Shouldn't Be a <span class="gradient-text">Black Box</span></span>
+      </h2>
+      <p class="section-body" data-lang="zh">Artise Biomedical 深信每個人都有了解自身腦功能的權利。我們整合神經科學與先進工程，建立「評估→監測→訓練」的認知閉環，讓神經解碼從實驗室走進日常生活。</p>
+      <p class="section-body" data-lang="en">Artise Biomedical believes everyone deserves to understand their own brain function. We integrate neuroscience and advanced engineering to build an assess-monitor-train closed loop, bringing neural decoding from the lab into everyday life.</p>
+      <div class="story-links">
+        <a href="/downloads/Artisebio_DM_2025.pdf" target="_blank" class="story-link" data-lang="zh">📄 2025 產品型錄 →</a>
+        <a href="/downloads/Artisebio_DM_2025.pdf" target="_blank" class="story-link" data-lang="en">📄 2025 Product Catalog →</a>
+        <a href="/downloads/大腦健身房：企業全方位關懷方案.pdf" target="_blank" class="story-link" data-lang="zh">🏢 企業整體健康方案 →</a>
+        <a href="/downloads/大腦健身房：企業全方位關懷方案.pdf" target="_blank" class="story-link" data-lang="en">🏢 Corporate Holistic Care Plan →</a>
+      </div>
+    </div>
+    <div class="story-loop">
+      <div class="loop-item loop-assess">
+        <div class="loop-icon">📊</div>
+        <div class="loop-label" data-lang="zh">評估<br><small>Assess</small></div>
+        <div class="loop-label" data-lang="en">Assess</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-item loop-monitor">
+        <div class="loop-icon">📡</div>
+        <div class="loop-label" data-lang="zh">監測<br><small>Monitor</small></div>
+        <div class="loop-label" data-lang="en">Monitor</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-item loop-train">
+        <div class="loop-icon">🎯</div>
+        <div class="loop-label" data-lang="zh">訓練<br><small>Train</small></div>
+        <div class="loop-label" data-lang="en">Train</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGMACOG PLATFORM -->
+<section class="section section-dark" id="sigmacog-section">
+  <div class="container">
+    <div class="section-eyebrow teal" data-i18n="sigmacog_eyebrow"></div>
+    <div class="sigmacog-grid">
+      <div class="sigmacog-info">
+        <h2 class="section-title white">
+          <span data-lang="zh">sigmacog<br>腦健康報告平台</span>
+          <span data-lang="en">sigmacog<br>Brain Health Platform</span>
+        </h2>
+        <p class="section-body light" data-lang="zh">5 分鐘完成臨床級腦健康評估。透過 EEG 量化 7 項認知指標，對應全年齡層常模數據，AI 生成個人化建議——讓腦健康管理成為家庭日常。</p>
+        <p class="section-body light" data-lang="en">Clinical-grade brain health assessment in 5 minutes. Quantify 7 cognitive indices via EEG against population norms, with AI-generated personalized recommendations — making brain health a family routine.</p>
+        <ul class="sigmacog-features">
+          <li><span class="feat-dot teal"></span><span data-lang="zh">7 項 EEG 認知指標（注意力、記憶、執行功能等）</span><span data-lang="en">7 EEG Cognitive Indices (attention, memory, executive function…)</span></li>
+          <li><span class="feat-dot teal"></span><span data-lang="zh">全年齡層常模 · 標準化 T 分數</span><span data-lang="en">All-age norms · Standardized T-scores</span></li>
+          <li><span class="feat-dot teal"></span><span data-lang="zh">AI 個人化建議 · 可客製機構報告</span><span data-lang="en">AI personalized advice · Customizable institutional reports</span></li>
+          <li><span class="feat-dot teal"></span><span data-lang="zh">訂閱制 SaaS · 雲端儀表板管理</span><span data-lang="en">Subscription SaaS · Cloud dashboard management</span></li>
+        </ul>
+        <div class="sigmacog-actions">
+          <a href="https://dash.lightup.tw/auth/login" target="_blank" rel="noopener" class="btn btn-teal">
+            <span data-lang="zh">🚀 進入 sigmacog 平台</span>
+            <span data-lang="en">🚀 Enter sigmacog Platform</span>
+          </a>
+          <a href="cart.html" class="btn btn-outline-light">
+            <span data-lang="zh">訂閱方案</span>
+            <span data-lang="en">Subscription Plans</span>
+          </a>
+        </div>
+      </div>
+      <div class="sigmacog-visual">
+        <div class="sigmacog-card-demo">
+          <div class="demo-header">
+            <span class="demo-dot red"></span><span class="demo-dot yellow"></span><span class="demo-dot green"></span>
+            <span class="demo-title">sigmacog Dashboard</span>
+          </div>
+          <div class="demo-body">
+            <div class="demo-metric" style="--accent:#14b8a6">
+              <span data-lang="zh">注意力</span><span data-lang="en">Attention</span>
+              <div class="demo-bar"><div class="demo-fill" style="width:78%;background:#14b8a6"></div></div>
+              <span class="demo-score">T 62</span>
+            </div>
+            <div class="demo-metric" style="--accent:#3b82f6">
+              <span data-lang="zh">工作記憶</span><span data-lang="en">Working Memory</span>
+              <div class="demo-bar"><div class="demo-fill" style="width:65%;background:#3b82f6"></div></div>
+              <span class="demo-score">T 55</span>
+            </div>
+            <div class="demo-metric" style="--accent:#8b5cf6">
+              <span data-lang="zh">執行功能</span><span data-lang="en">Executive Function</span>
+              <div class="demo-bar"><div class="demo-fill" style="width:83%;background:#8b5cf6"></div></div>
+              <span class="demo-score">T 67</span>
+            </div>
+            <div class="demo-metric" style="--accent:#f59e0b">
+              <span data-lang="zh">處理速度</span><span data-lang="en">Processing Speed</span>
+              <div class="demo-bar"><div class="demo-fill" style="width:55%;background:#f59e0b"></div></div>
+              <span class="demo-score">T 48</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="section section-gray" id="ecosystem">
+  <div class="container">
+    <div class="section-eyebrow" data-i18n="eco_eyebrow"></div>
+    <h2 class="section-title">
+      <span data-lang="zh">Mynd 科技生態系</span>
+      <span data-lang="en">Mynd Tech Ecosystem</span>
+    </h2>
+    <p class="section-sub" data-lang="zh">三款互補工具，構成完整的認知健康評測與訓練閉環。</p>
+    <p class="section-sub" data-lang="en">Three complementary tools forming a complete cognitive health assessment and training loop.</p>
+
+    <div class="eco-grid">
+      <!-- VisioMynd -->
+      <div class="eco-card" style="--accent:#3b82f6">
+        <div class="eco-icon" style="background:rgba(59,130,246,.15);color:#3b82f6">👁</div>
+        <div class="eco-badge" style="background:rgba(59,130,246,.15);color:#3b82f6">VisioMynd</div>
+        <p class="eco-tagline">"See the Mind. Lead the Life."</p>
+        <p class="eco-desc" data-lang="zh">基於 rPPG 影像技術的免接觸壓力/疲勞即時監測，僅需鏡頭即可分析心率與自律神經狀態。</p>
+        <p class="eco-desc" data-lang="en">Contact-free real-time stress and fatigue monitoring via rPPG imaging technology — just a camera to analyze heart rate and autonomic nervous system state.</p>
+        <a href="https://swluciferase.github.io/rppg-webapp/" target="_blank" rel="noopener" class="btn btn-eco" style="--accent:#3b82f6">
+          <span data-lang="zh">體驗 VisioMynd →</span>
+          <span data-lang="en">Try VisioMynd →</span>
+        </a>
+      </div>
+
+      <!-- VeloMynd -->
+      <div class="eco-card" style="--accent:#14b8a6">
+        <div class="eco-icon" style="background:rgba(20,184,166,.15);color:#14b8a6">🎯</div>
+        <div class="eco-badge" style="background:rgba(20,184,166,.15);color:#14b8a6">VeloMynd</div>
+        <p class="eco-tagline">"Boost the Mind. Shape the Future."</p>
+        <p class="eco-desc" data-lang="zh">持續表現測驗（CPT）量化專注力與衝動控制，搭配標準化 T 分數報告，適用兒童至成人研究。</p>
+        <p class="eco-desc" data-lang="en">Continuous Performance Test (CPT) quantifying attention and impulse control with standardized T-score reports, suitable for child to adult research.</p>
+        <a href="https://swluciferase.github.io/Animal-CPT-Web/" target="_blank" rel="noopener" class="btn btn-eco" style="--accent:#14b8a6">
+          <span data-lang="zh">體驗 VeloMynd →</span>
+          <span data-lang="en">Try VeloMynd →</span>
+        </a>
+      </div>
+
+      <!-- ViboMynd -->
+      <div class="eco-card" style="--accent:#8b5cf6">
+        <div class="eco-icon" style="background:rgba(139,92,246,.15);color:#8b5cf6">🎵</div>
+        <div class="eco-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">ViboMynd</div>
+        <p class="eco-tagline">"Tune the Mind. Find Your Flow."</p>
+        <p class="eco-desc" data-lang="zh">雙耳節拍（Binaural Beats）音頻訓練工具，透過頻率差調節腦波狀態，促進專注、放鬆或深層睡眠。</p>
+        <p class="eco-desc" data-lang="en">Binaural beats audio training tool that modulates brainwave states through frequency differences to promote focus, relaxation, or deep sleep.</p>
+        <a href="https://swluciferase.github.io/BNB-Web/" target="_blank" rel="noopener" class="btn btn-eco" style="--accent:#8b5cf6">
+          <span data-lang="zh">體驗 ViboMynd →</span>
+          <span data-lang="en">Try ViboMynd →</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEEG HARDWARE (minimal) -->
+<section class="section" id="hardware">
+  <div class="container">
+    <div class="section-eyebrow" data-i18n="hw_eyebrow"></div>
+    <h2 class="section-title">
+      <span data-lang="zh">StEEG 腦波硬體</span>
+      <span data-lang="en">StEEG EEG Hardware</span>
+    </h2>
+    <p class="section-sub" data-lang="zh">從乾式穿戴到多通道研究系統，提供完整的腦電採集硬體解決方案。</p>
+    <p class="section-sub" data-lang="en">From dry wearable devices to multi-channel research systems — complete EEG hardware solutions.</p>
+    <div class="hw-grid">
+      <div class="hw-card">
+        <div class="hw-icon">🧠</div>
+        <h4 data-lang="zh">Altair — 8 通道乾式無線 EEG</h4>
+        <h4 data-lang="en">Altair — 8-Channel Dry Wireless EEG</h4>
+        <p data-lang="zh">免備皮電極，穿戴即測，1000 Hz 採樣</p>
+        <p data-lang="en">No-prep electrodes, wearable, 1000 Hz sampling</p>
+      </div>
+      <div class="hw-card">
+        <div class="hw-icon">🎧</div>
+        <h4 data-lang="zh">Sirius / Vega — 20/32 通道無線 EEG 帽</h4>
+        <h4 data-lang="en">Sirius / Vega — 20/32-Channel Wireless Cap</h4>
+        <p data-lang="zh">免凝膠海綿電極，BCI 研究級，支援兒童（3歲以上）</p>
+        <p data-lang="en">Gel-free sponge electrodes, BCI-grade, children 3+ supported</p>
+      </div>
+      <div class="hw-card">
+        <div class="hw-icon">🔬</div>
+        <h4 data-lang="zh">Gemini — 超掃描 EEG</h4>
+        <h4 data-lang="en">Gemini — Hyperscanning EEG</h4>
+        <p data-lang="zh">EEG / ECG / EMG 可切換，多模態社會神經科學研究</p>
+        <p data-lang="en">Switchable EEG/ECG/EMG, multi-modal social neuroscience</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <a href="products.html" class="btn btn-outline-dark" data-i18n="hw_view_all"></a>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOADS CTA -->
+<section class="section section-dark" id="downloads-cta">
+  <div class="container" style="text-align:center;max-width:680px">
+    <div class="section-eyebrow teal" data-i18n="dl_eyebrow"></div>
+    <h2 class="section-title white" data-i18n="dl_cta_title"></h2>
+    <p class="section-body light" data-lang="zh">下載 Cygnus 資料擷取軟體、SDK、使用手冊及驅動程式。部分項目需要登入後方可下載。</p>
+    <p class="section-body light" data-lang="en">Download Cygnus acquisition software, SDK, user manuals and drivers. Some items require login to access.</p>
+    <div style="margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="downloads.html" class="btn btn-teal" data-i18n="dl_cta_btn"></a>
+      <a href="login.html" class="btn btn-outline-light" data-i18n="dl_login_btn"></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-gray" id="contact">
+  <div class="container">
+    <div class="section-eyebrow" data-i18n="contact_eyebrow"></div>
+    <h2 class="section-title" data-i18n="contact_title"></h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <h4 data-lang="zh">電話 / 傳真</h4>
+        <h4 data-lang="en">Phone / Fax</h4>
+        <p>Tel: +886-2-2908-8658</p>
+        <p>Fax: +886-2-2908-8656</p>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <h4>Email</h4>
+        <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        <h4 data-lang="zh">地址</h4>
+        <h4 data-lang="en">Address</h4>
+        <p data-lang="zh" style="font-size:.875rem">新北市泰山區南泰路1-1號201室</p>
+        <p data-lang="en" style="font-size:.875rem">Rm. 201, No. 1-1, Nantai Rd., Taishan Dist., New Taipei City 243089, Taiwan</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" style="height:32px;width:auto;filter:brightness(0) invert(1);opacity:.85">
+      <span class="footer-company" data-lang="zh">亞堤仕生醫科技股份有限公司</span>
+      <span class="footer-company" data-lang="en">Artise Biomedical Co., Ltd.</span>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+      <a href="tel:+886229088658">+886-2-2908-8658</a>
+    </div>
+    <div class="footer-copy">© 2025 Artise Biomedical Co., Ltd. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

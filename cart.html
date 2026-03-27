@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — StEEG</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
+      <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
+      <a href="cart.html" class="nav-link active nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <div id="nav-auth"></div>
+      <a href="admin/" class="nav-link nav-admin" id="nav-admin-link" style="display:none" data-i18n="nav_admin"></a>
+      <button id="lang-toggle" class="lang-toggle">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1 data-i18n="cart_title"></h1>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+    <div class="cart-layout" id="cart-layout">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-steeg">StEEG</span>
+      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+    </div>
+    <div class="footer-copy" data-i18n="footer_rights"></div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function render() {
+    const layout = document.getElementById('cart-layout');
+    const cart = CART.get();
+
+    if (!cart.length) {
+      layout.innerHTML = `
+        <div class="cart-empty">
+          <p data-i18n="cart_empty">${t('cart_empty')}</p>
+          <a href="products.html" class="btn btn-primary" data-i18n="cart_continue">${t('cart_continue')}</a>
+        </div>`;
+      return;
+    }
+
+    const lang = getLang();
+    const itemsHtml = cart.map(item => {
+      const name = lang === 'zh' ? item.name_zh : item.name_en;
+      const lineTotal = (item.price || 0) * item.qty;
+      return `
+        <tr class="cart-row" data-id="${item.product_id}">
+          <td class="cart-img-cell">
+            <img src="${item.image_url || '/images/placeholder.png'}" alt="${name}" class="cart-thumb">
+          </td>
+          <td class="cart-name-cell">
+            <div class="cart-item-name">${name}</div>
+            ${!item.price ? `<div class="cart-item-note">${t('contact_agent')}</div>` : ''}
+          </td>
+          <td class="cart-price-cell">
+            ${item.price ? item.currency + ' ' + item.price.toLocaleString() : '—'}
+          </td>
+          <td class="cart-qty-cell">
+            <input type="number" class="qty-input" value="${item.qty}" min="1" max="999" data-id="${item.product_id}">
+          </td>
+          <td class="cart-sub-cell">
+            ${item.price ? item.currency + ' ' + lineTotal.toLocaleString() : '—'}
+          </td>
+          <td class="cart-rm-cell">
+            <button class="btn-icon rm-btn" data-id="${item.product_id}" title="${t('remove')}">✕</button>
+          </td>
+        </tr>`;
+    }).join('');
+
+    const total = CART.total();
+    const totalHtml = total > 0
+      ? `USD ${total.toLocaleString()}`
+      : `<span>${t('contact_agent')}</span>`;
+
+    layout.innerHTML = `
+      <div class="cart-main">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th data-i18n="nav_products">${t('nav_products')}</th>
+              <th data-i18n="price">${t('price')}</th>
+              <th data-i18n="qty">${t('qty')}</th>
+              <th data-i18n="subtotal">${t('subtotal')}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cart-tbody">${itemsHtml}</tbody>
+        </table>
+      </div>
+      <div class="cart-aside">
+        <div class="order-form">
+          <h3 data-i18n="checkout">${t('checkout')}</h3>
+
+          <!-- Order type -->
+          <div class="order-type-tabs">
+            <button class="order-type-tab active" data-type="inquiry" data-i18n="order_type_inquiry">${t('order_type_inquiry')}</button>
+            <button class="order-type-tab" data-type="purchase" data-i18n="order_type_purchase">${t('order_type_purchase')}</button>
+          </div>
+
+          <!-- Guest fields (shown when not logged in) -->
+          <div id="guest-fields">
+            <input type="text" id="o-name" class="form-input" placeholder="${t('your_name')}" required>
+            <input type="email" id="o-email" class="form-input" placeholder="${t('your_email')}" required>
+            <input type="text" id="o-company" class="form-input" placeholder="${t('your_company')}">
+          </div>
+
+          <textarea id="o-note" class="form-input" rows="3" placeholder="${t('order_note')}"></textarea>
+
+          <div class="order-total">
+            <span data-i18n="total">${t('total')}</span>
+            <strong>${totalHtml}</strong>
+          </div>
+
+          <button class="btn btn-primary btn-block" id="submit-order">${t('submit_order')}</button>
+        </div>
+      </div>`;
+
+    // Bind events
+    document.querySelectorAll('.rm-btn').forEach(btn => {
+      btn.addEventListener('click', () => { CART.remove(parseInt(btn.dataset.id)); render(); });
+    });
+    document.querySelectorAll('.qty-input').forEach(input => {
+      input.addEventListener('change', () => {
+        CART.setQty(parseInt(input.dataset.id), input.value);
+        render();
+      });
+    });
+    document.querySelectorAll('.order-type-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.order-type-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Pre-fill guest fields if logged in
+    const user = APP.getUser();
+    if (user) {
+      document.getElementById('guest-fields').style.display = 'none';
+    }
+
+    document.getElementById('submit-order').addEventListener('click', submitOrder);
+  }
+
+  async function submitOrder() {
+    const cart = CART.get();
+    if (!cart.length) return;
+
+    const type = document.querySelector('.order-type-tab.active')?.dataset.type || 'inquiry';
+    const note = document.getElementById('o-note')?.value || '';
+    const user = APP.getUser();
+
+    let guest_name = '', guest_email = '', guest_company = '';
+    if (!user) {
+      guest_name = document.getElementById('o-name')?.value.trim() || '';
+      guest_email = document.getElementById('o-email')?.value.trim() || '';
+      guest_company = document.getElementById('o-company')?.value.trim() || '';
+      if (!guest_name || !guest_email) {
+        APP.showToast(t('your_name') + ' / ' + t('your_email'), 'error');
+        return;
+      }
+    }
+
+    const btn = document.getElementById('submit-order');
+    btn.disabled = true;
+    btn.textContent = t('loading');
+
+    try {
+      const items = cart.map(i => ({
+        product_id: i.product_id,
+        product_name: i.name_zh + ' / ' + i.name_en,
+        qty: i.qty,
+        price: i.price || 0,
+      }));
+      await API.post('/orders', { items, type, note, guest_name, guest_email, guest_company });
+      CART.clear();
+      APP.showToast(t('order_success'), 'success');
+      setTimeout(() => { window.location.href = '/'; }, 2000);
+    } catch {
+      APP.showToast(t('order_error'), 'error');
+      btn.disabled = false;
+      btn.textContent = t('submit_order');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', render);
+  window.addEventListener('cart-updated', render);
+})();
+</script>
+</body>
+</html>

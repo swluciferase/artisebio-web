@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads — StEEG</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="products.html" class="nav-link" data-i18n="nav_products"></a>
+      <a href="downloads.html" class="nav-link active" data-i18n="nav_downloads"></a>
+      <a href="cart.html" class="nav-link nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <div id="nav-auth"></div>
+      <a href="admin/" class="nav-link nav-admin" id="nav-admin-link" style="display:none" data-i18n="nav_admin"></a>
+      <button id="lang-toggle" class="lang-toggle">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1 data-i18n="downloads_title"></h1>
+    <p class="page-header-sub" data-i18n="downloads_sub"></p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+    <div id="downloads-list">
+      <p class="loading-placeholder" data-i18n="loading"></p>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-steeg">StEEG</span>
+      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+      <a href="tel:+886229088658">+886-2-2908-8658</a>
+    </div>
+    <div class="footer-copy" data-i18n="footer_rights"></div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const catLabels = {
+    software: { zh: '軟體', en: 'Software' },
+    firmware: { zh: '韌體', en: 'Firmware' },
+    manual: { zh: '使用手冊', en: 'Manual' },
+    driver: { zh: '驅動程式', en: 'Driver' },
+  };
+
+  async function loadDownloads() {
+    const list = document.getElementById('downloads-list');
+    try {
+      const items = await API.get('/downloads');
+      if (!items.length) { list.innerHTML = '<p>—</p>'; return; }
+
+      // Group by category
+      const groups = {};
+      items.forEach(d => {
+        if (!groups[d.category]) groups[d.category] = [];
+        groups[d.category].push(d);
+      });
+
+      const lang = getLang();
+      let html = '';
+      Object.entries(groups).forEach(([cat, rows]) => {
+        const label = catLabels[cat] ? catLabels[cat][lang] : cat;
+        html += `<div class="dl-group">
+          <h3 class="dl-group-title">${label}</h3>
+          <div class="dl-cards">
+            ${rows.map(d => dlCard(d, lang)).join('')}
+          </div>
+        </div>`;
+      });
+      list.innerHTML = html;
+    } catch {
+      list.innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
+    }
+  }
+
+  function dlCard(d, lang) {
+    const name = lang === 'zh' ? d.name_zh : d.name_en;
+    const desc = lang === 'zh' ? d.description_zh : d.description_en;
+    const ver = d.version ? `<span class="dl-version">v${d.version}</span>` : '';
+
+    let actionHtml;
+    if (d.locked) {
+      actionHtml = `<a href="login.html" class="btn btn-outline btn-sm">
+        🔒 <span data-i18n="login_required">${t('login_required')}</span>
+      </a>`;
+    } else {
+      actionHtml = `<a href="/uploads/${d.filename}" class="btn btn-primary btn-sm" download>
+        ⬇ <span data-i18n="download">${t('download')}</span>
+      </a>`;
+    }
+
+    return `
+      <div class="dl-card ${d.locked ? 'dl-locked' : ''}">
+        <div class="dl-card-body">
+          <div class="dl-card-name">${name} ${ver}</div>
+          ${desc ? `<div class="dl-card-desc">${desc}</div>` : ''}
+        </div>
+        <div class="dl-card-action">${actionHtml}</div>
+      </div>`;
+  }
+
+  document.addEventListener('DOMContentLoaded', loadDownloads);
+})();
+</script>
+</body>
+</html>

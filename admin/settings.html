@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Admin — StEEG</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+<nav class="admin-nav">
+  <a href="../" class="admin-nav-brand"><span class="brand-steeg">StEEG</span> Admin</a>
+  <div class="admin-nav-links">
+    <a href="./" class="admin-nav-link">Dashboard</a>
+    <a href="./products.html" class="admin-nav-link">Products</a>
+    <a href="./orders.html" class="admin-nav-link">Orders</a>
+    <a href="./downloads.html" class="admin-nav-link">Downloads</a>
+    <a href="./settings.html" class="admin-nav-link active">Settings</a>
+    <a href="../" class="admin-nav-link">← Site</a>
+    <button id="admin-logout" class="btn btn-sm">Logout</button>
+  </div>
+</nav>
+
+<main class="admin-main">
+  <h1 class="admin-page-title">Site Settings</h1>
+  <form id="settings-form" class="admin-form settings-form">
+    <div class="form-group">
+      <label>Site Title</label>
+      <input type="text" name="site_title" class="form-input" placeholder="StEEG — Artise Biomedical">
+    </div>
+    <div class="form-group">
+      <label>Contact Email</label>
+      <input type="email" name="contact_email" class="form-input" placeholder="sales@artisebio.com">
+    </div>
+    <div class="form-group">
+      <label>Contact Phone</label>
+      <input type="text" name="contact_phone" class="form-input" placeholder="+886-2-2908-8658">
+    </div>
+    <div class="form-group">
+      <label>Hero Title ZH</label>
+      <input type="text" name="hero_title_zh" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>Hero Title EN</label>
+      <input type="text" name="hero_title_en" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>Notice Banner (leave blank to hide)</label>
+      <input type="text" name="notice_banner" class="form-input" placeholder="e.g. We'll be at SfN 2025 Booth #1234">
+    </div>
+    <div class="form-footer">
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+      <span id="save-msg" style="display:none;color:var(--green);margin-left:1rem">✓ Saved</span>
+    </div>
+  </form>
+
+  <hr style="margin:2rem 0">
+  <h2>Users</h2>
+  <div id="users-list"><p>Loading…</p></div>
+</main>
+
+<script src="../js/i18n.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  async function checkAdmin() {
+    const token = API.token();
+    if (!token) { window.location.href = '/login.html'; return false; }
+    try {
+      const user = await API.get('/auth/me');
+      if (user.role !== 'admin') { window.location.href = '/'; return false; }
+      return true;
+    } catch { window.location.href = '/login.html'; return false; }
+  }
+
+  async function loadSettings() {
+    const settings = await API.get('/settings');
+    const form = document.getElementById('settings-form');
+    Object.entries(settings).forEach(([k, v]) => {
+      const el = form.querySelector(`[name="${k}"]`);
+      if (el) el.value = v;
+    });
+  }
+
+  async function loadUsers() {
+    const list = document.getElementById('users-list');
+    try {
+      const users = await API.get('/admin/users');
+      list.innerHTML = `
+        <table class="admin-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Company</th><th>Role</th><th>Joined</th></tr></thead>
+          <tbody>${users.map(u => `
+            <tr>
+              <td>${u.id}</td>
+              <td>${u.name}</td>
+              <td>${u.email}</td>
+              <td>${u.company || '—'}</td>
+              <td><span class="badge badge-${u.role}">${u.role}</span></td>
+              <td>${u.created_at?.slice(0,10) || ''}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch (e) { list.innerHTML = '<p class="error-msg">' + e.message + '</p>'; }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!await checkAdmin()) return;
+    loadSettings();
+    loadUsers();
+    document.getElementById('admin-logout').addEventListener('click', () => APP.logout());
+
+    document.getElementById('settings-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {};
+      new FormData(form).forEach((v, k) => data[k] = v);
+      try {
+        await API.put('/admin/settings', data);
+        const msg = document.getElementById('save-msg');
+        msg.style.display = '';
+        setTimeout(() => msg.style.display = 'none', 2000);
+      } catch (err) { alert('Save failed: ' + err.message); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

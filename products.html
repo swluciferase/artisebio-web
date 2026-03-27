@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — StEEG</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <img src="images/artise-logo.png" alt="Artise Biomedical" class="nav-logo-img">
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="menu">&#9776;</button>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/" class="nav-link" data-i18n="nav_home"></a>
+      <a href="products.html" class="nav-link active" data-i18n="nav_products"></a>
+      <a href="downloads.html" class="nav-link" data-i18n="nav_downloads"></a>
+      <a href="cart.html" class="nav-link nav-cart-link">
+        <span data-i18n="nav_cart"></span>
+        <span class="cart-badge" style="display:none">0</span>
+      </a>
+      <div id="nav-auth"></div>
+      <a href="admin/" class="nav-link nav-admin" id="nav-admin-link" style="display:none" data-i18n="nav_admin"></a>
+      <button id="lang-toggle" class="lang-toggle">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1 data-i18n="nav_products"></h1>
+  </div>
+</div>
+
+<!-- Product detail modal overlay -->
+<div class="modal-overlay" id="product-modal" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<main class="section">
+  <div class="container">
+    <!-- Category tabs -->
+    <div class="cat-tabs" id="cat-tabs">
+      <button class="cat-tab active" data-cat="" data-i18n="cat_all"></button>
+    </div>
+
+    <!-- Grid -->
+    <div class="product-grid" id="product-grid">
+      <div class="loading-placeholder" data-i18n="loading"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-steeg">StEEG</span>
+      <span class="footer-company">Artise Biomedical Co., Ltd.</span>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sales@artisebio.com">sales@artisebio.com</a>
+      <a href="tel:+886229088658">+886-2-2908-8658</a>
+    </div>
+    <div class="footer-copy" data-i18n="footer_rights"></div>
+  </div>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  let allProducts = [];
+  let allCategories = [];
+  let activeCat = '';
+
+  // Check for ?slug= param to show product detail
+  const urlParams = new URLSearchParams(window.location.search);
+  const slugParam = urlParams.get('slug');
+
+  async function init() {
+    try {
+      [allProducts, allCategories] = await Promise.all([
+        API.get('/products'),
+        API.get('/categories'),
+      ]);
+      renderTabs();
+      renderGrid();
+      if (slugParam) openProductBySlug(slugParam);
+    } catch (e) {
+      document.getElementById('product-grid').innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
+    }
+  }
+
+  function renderTabs() {
+    const tabs = document.getElementById('cat-tabs');
+    const catMap = {
+      'eeg-devices': t('cat_eeg'),
+      'software': t('cat_software'),
+      'caps': t('cat_caps'),
+      'electrodes': t('cat_electrodes'),
+      'cables': t('cat_cables'),
+      'accessories': t('cat_accessories'),
+    };
+    // Add a tab for each category that has products
+    const usedSlugs = new Set(allProducts.map(p => p.cat_slug));
+    let html = `<button class="cat-tab ${!activeCat ? 'active' : ''}" data-cat="">${t('cat_all')}</button>`;
+    allCategories.filter(c => usedSlugs.has(c.slug)).forEach(c => {
+      const label = getLang() === 'zh' ? c.name_zh : c.name_en;
+      html += `<button class="cat-tab ${activeCat === c.slug ? 'active' : ''}" data-cat="${c.slug}">${label}</button>`;
+    });
+    tabs.innerHTML = html;
+    tabs.querySelectorAll('.cat-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeCat = btn.dataset.cat;
+        tabs.querySelectorAll('.cat-tab').forEach(b => b.classList.toggle('active', b === btn));
+        renderGrid();
+      });
+    });
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('product-grid');
+    const filtered = activeCat ? allProducts.filter(p => p.cat_slug === activeCat) : allProducts;
+    if (!filtered.length) { grid.innerHTML = '<p class="empty-msg">—</p>'; return; }
+    grid.innerHTML = filtered.map(p => productCard(p)).join('');
+    grid.querySelectorAll('.btn-add-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = JSON.parse(btn.dataset.product);
+        CART.add({
+          product_id: p.id,
+          product_name: p.name_zh + ' / ' + p.name_en,
+          name_zh: p.name_zh,
+          name_en: p.name_en,
+          price: p.price,
+          currency: p.currency,
+          image_url: p.image_url,
+        });
+        APP.showToast(t('toast_added'), 'success');
+      });
+    });
+    grid.querySelectorAll('.btn-detail').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.dataset.slug;
+        openProductBySlug(slug);
+        history.pushState({}, '', '/products.html?slug=' + slug);
+      });
+    });
+  }
+
+  function productCard(p) {
+    const lang = getLang();
+    const name = lang === 'zh' ? p.name_zh : p.name_en;
+    const desc = (lang === 'zh' ? p.description_zh : p.description_en) || '';
+    const priceHtml = p.show_price
+      ? `<span class="product-price">${p.currency} ${p.price.toLocaleString()}</span>`
+      : `<span class="product-price contact">${t('contact_agent')}</span>`;
+    const cartBtn = p.in_stock
+      ? `<button class="btn btn-sm btn-add-cart" data-product='${JSON.stringify(p).replace(/'/g, "&#39;")}'>${t('add_cart')}</button>`
+      : `<button class="btn btn-sm" disabled>${t('out_of_stock')}</button>`;
+    return `
+      <div class="product-card">
+        <div class="product-img-wrap btn-detail" data-slug="${p.slug}" style="cursor:pointer">
+          <img src="${p.image_url || '/images/placeholder.png'}" alt="${name}" loading="lazy">
+        </div>
+        <div class="product-card-body">
+          <div class="product-model">${p.model_id || ''}</div>
+          <h3 class="product-name">
+            <button class="link-btn btn-detail" data-slug="${p.slug}">${name}</button>
+          </h3>
+          <p class="product-desc">${desc.slice(0, 80)}${desc.length > 80 ? '…' : ''}</p>
+          <div class="product-footer">
+            ${priceHtml}
+            <div class="product-btns">
+              ${cartBtn}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  async function openProductBySlug(slug) {
+    const modal = document.getElementById('product-modal');
+    const content = document.getElementById('modal-content');
+    modal.style.display = 'flex';
+    content.innerHTML = '<p class="loading-placeholder">' + t('loading') + '</p>';
+    try {
+      const p = await API.get('/products/' + slug);
+      const lang = getLang();
+      const name = lang === 'zh' ? p.name_zh : p.name_en;
+      const desc = (lang === 'zh' ? p.description_zh : p.description_en) || '';
+      let specs = [];
+      try { specs = JSON.parse(p.specs_json || '[]'); } catch {}
+      const specsHtml = specs.length ? `
+        <div class="specs-section">
+          <h4 data-i18n="specs">${t('specs')}</h4>
+          <table class="specs-table">
+            ${specs.map(s => `<tr><th>${s.key || s[0] || ''}</th><td>${s.value || s[1] || ''}</td></tr>`).join('')}
+          </table>
+        </div>` : '';
+      const priceHtml = p.show_price
+        ? `<span class="product-price lg">${p.currency} ${p.price.toLocaleString()}</span>`
+        : `<span class="product-price contact lg">${t('contact_agent')}</span>`;
+      const cartBtn = p.in_stock
+        ? `<button class="btn btn-primary btn-add-cart" id="modal-add-cart" data-product='${JSON.stringify(p).replace(/'/g, "&#39;")}'>${t('add_cart')}</button>`
+        : `<button class="btn btn-primary" disabled>${t('out_of_stock')}</button>`;
+
+      content.innerHTML = `
+        <div class="modal-product">
+          <div class="modal-product-img">
+            <img src="${p.image_url || '/images/placeholder.png'}" alt="${name}">
+          </div>
+          <div class="modal-product-info">
+            <div class="product-model">${p.model_id || ''}</div>
+            <h2 class="modal-product-name">${name}</h2>
+            <p class="modal-product-desc">${desc}</p>
+            ${specsHtml}
+            <div class="modal-product-footer">
+              ${priceHtml}
+              ${cartBtn}
+            </div>
+          </div>
+        </div>`;
+      document.getElementById('modal-add-cart')?.addEventListener('click', function () {
+        const prod = JSON.parse(this.dataset.product);
+        CART.add({
+          product_id: prod.id,
+          product_name: prod.name_zh + ' / ' + prod.name_en,
+          name_zh: prod.name_zh,
+          name_en: prod.name_en,
+          price: prod.price,
+          currency: prod.currency,
+          image_url: prod.image_url,
+        });
+        APP.showToast(t('toast_added'), 'success');
+      });
+    } catch {
+      content.innerHTML = '<p class="error-msg">' + t('error_load') + '</p>';
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('product-modal').style.display = 'none';
+    history.pushState({}, '', '/products.html');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('product-modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+  });
+})();
+</script>
+</body>
+</html>
